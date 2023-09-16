@@ -45,16 +45,14 @@ const romanaFont = localFont({
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const { pathname } = useRouter();
-  const chat = useChat({
-    initialMessages: [],
-  });
+  const chat = useChat({});
 
   return (
     <div
       className={cn(
         "h-full w-full font-sans text-xl font-normal",
-        alpinaFont.className,
-        romanaFont.className,
+        alpinaFont.variable,
+        romanaFont.variable,
       )}
     >
       <div className="relative flex h-full max-h-screen w-full flex-col items-stretch gap-2 px-12">

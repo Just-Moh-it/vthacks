@@ -1,12 +1,12 @@
 import { Composition } from "remotion";
 import ImageSlide from "~/remotion/slideComponents/image";
-import ImageAndTitleAndPoints from "~/remotion/slideComponents/imageAndTitleAndPoints";
+import ImageAndTitleAndPointsSlide from "~/remotion/slideComponents/imageAndTitleAndPoints";
 
 const Root = () => {
   return (
     <Composition
       id="main-comp"
-      component={ImageAndTitleAndPoints}
+      component={ImageAndTitleAndPointsSlide}
       fps={30}
       durationInFrames={30 * 40}
       width={1920}

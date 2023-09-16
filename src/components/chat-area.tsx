@@ -1,20 +1,22 @@
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { api } from "~/utils/api";
 // import { useChat } from "~/lib/hooks/useChat";
 import { type useChat } from "ai/react";
 import { cn } from "~/lib/utils";
-import Link from "next/link";
 
 export default function ChatArea({
   messages,
+  setMessages,
   handleSubmit,
   handleInputChange,
-  input
+  input,
 }: ReturnType<typeof useChat>) {
   const [promptInput, setPromptInput] = useState("");
-
+  const [i, setI] = useState(0);
+  const { mutate: createElevenlabsMutate } =
+    api.elevenlabs.createTTS.useMutation();
   const { mutate, data, isLoading } =
     api.predictNextQuestion.predict.useMutation({
       onMutate: () => {
@@ -29,9 +31,19 @@ export default function ChatArea({
   const predicted = useRef(false);
   const [currentPrediction, setCurrentPrediction] = useState("");
 
+  if (i == 5) {
+    setMessages([
+      ...messages,
+      { id: "test_system", content: "", role: "system" },
+    ]);
+  }
+
   return (
     <>
-      <div className="flex grow flex-col gap-8 p-7 h-full" id="conversation-container">
+      <div
+        className="flex h-full grow flex-col gap-8 p-7"
+        id="conversation-container"
+      >
         {messages.map((m) => (
           <div
             key={m.id}
@@ -107,7 +119,10 @@ export default function ChatArea({
           </Button>
         </div>
 
-        <p className="block text-center text-sm text-[#A6A19F]">
+        <p
+          className="block text-center text-sm text-[#A6A19F]"
+          onClick={() => createElevenlabsMutate({})}
+        >
           This is just a hackathon project and don’t use it for real things btw
         </p>
       </form>

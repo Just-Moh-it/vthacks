@@ -2,24 +2,24 @@ import { AbsoluteFill, Img } from "remotion";
 import { type z } from "zod";
 import { type imageAndTitleAndPointsSlideSchema } from "~/types/lisa-json";
 
-export default function ImageAndTitleAndPoints({
+export default function ImageAndTitleAndPointsSlide({
   imageUrl,
   title,
   points,
 }: z.infer<typeof imageAndTitleAndPointsSlideSchema>) {
   return (
-    <AbsoluteFill className="flex-row bg-white">
+    <AbsoluteFill className="!flex-row gap-36 bg-white px-28 py-48">
       <Img
         src={imageUrl}
-        className="aspect-[16/11] h-[64%] object-cover object-center"
+        className="h-[700px] w-[620px] object-cover object-center"
       />
-      <div className="flex flex-col gap-12">
-        <h1 className="text-5xl">{title}</h1>
-        <div className="flex flex-col items-start gap-10">
-          {points.map((point) => (
-            <h1 key={point}>{point}</h1>
-          ))}
-        </div>
+      <div className="flex flex-col gap-16 font-display">
+        <h1 className="text-[100px] leading-[127px]">{title}</h1>
+        {points.map((point) => (
+          <p className="text-[50px] leading-[64px]" key={point}>
+            {point}
+          </p>
+        ))}
       </div>
     </AbsoluteFill>
   );

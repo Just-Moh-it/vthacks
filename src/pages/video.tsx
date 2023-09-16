@@ -1,10 +1,95 @@
 import ChatArea from "~/components/chat-area";
-import shallow from "zustand/shallow";
 import { Player } from "@remotion/player";
 import { type useChat } from "ai/react";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { useEffect, useMemo, useState } from "react";
+import { type InputProps } from "~/remotion/video";
+import RemotionVideo from "~/remotion/video";
+import { prefetch } from "remotion";
 
 export default function Video(props: ReturnType<typeof useChat>) {
+  const [inputProps, setInputProps] = useState<InputProps>({
+    chapters: [
+      {
+        audioUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        faceVideoUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        slides: [
+          {
+            type: "image",
+            imageUrl:
+              "https://images.unsplash.com/photo-1693155119174-4b6e79a27814?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3132&q=80",
+            durationInFrames: 100,
+          },
+        ],
+      },
+      {
+        audioUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        faceVideoUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        slides: [
+          {
+            type: "title",
+            title: "Toxic ex wifey",
+            durationInFrames: 100,
+          },
+        ],
+      },
+      {
+        audioUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        faceVideoUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        slides: [
+          {
+            type: "titleAndCaption",
+            title: "Toxic ex wifey",
+            caption: "(like fr bro)",
+            durationInFrames: 100,
+          },
+        ],
+      },
+      {
+        audioUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        faceVideoUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        slides: [
+          {
+            type: "quoteAndAuthor",
+            quote:
+              "“When it is cool... it is awesome too, just like how to see people and stuff like that”",
+            authorName: "John Dalton",
+            durationInFrames: 100,
+          },
+        ],
+      },
+      {
+        audioUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        faceVideoUrl:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+        slides: [
+          {
+            type: "imageAndTitleAndPoints",
+            imageUrl:
+              "https://images.unsplash.com/photo-1693155119174-4b6e79a27814?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3132&q=80",
+            points: [
+              "It’s cool",
+              "It looks great!",
+              "It is awesome!",
+              "It is cool!",
+            ],
+            title: "Why make it?",
+            durationInFrames: 100,
+          },
+        ],
+      },
+    ],
+  });
+
   const onPause = () => {
     // setMessages([
     //   {
@@ -28,6 +113,38 @@ export default function Video(props: ReturnType<typeof useChat>) {
     //if it is not already in the array, add it to the array and all messages before it.
   };
 
+  useEffect(() => {
+    console.log("Changed");
+    inputProps.chapters.forEach((chapter) => {
+      [
+        chapter.audioUrl,
+        chapter.faceVideoUrl,
+        ...chapter.slides.map((slide) => "imageUrl" in slide && slide.imageUrl),
+      ]
+        .flatMap((item) => (item ? [item] : []))
+        .forEach((url) => {
+          try {
+            prefetch(url);
+            console.info("Prefetch worked", url);
+          } catch (err) {
+            console.warn("Prefetch failed for asset", url);
+          }
+        });
+    });
+  }, [inputProps.chapters]);
+
+  const totalDurationInFrames = useMemo(
+    () =>
+      inputProps.chapters.reduce((agg, { slides }) => {
+        const slidesAggDur = slides.reduce(
+          (aggSlide, { durationInFrames }) => aggSlide + durationInFrames,
+          0,
+        );
+        return agg + slidesAggDur;
+      }, 0) || 1,
+    [inputProps],
+  );
+
   return (
     <div className="flex aspect-[16/10.5] min-h-0 w-full  grid-cols-3 grid-rows-3 items-stretch gap-7 pb-16">
       <div className="flex flex-col gap-7">
@@ -36,11 +153,12 @@ export default function Video(props: ReturnType<typeof useChat>) {
           <Player
             controls
             fps={30}
-            durationInFrames={40 * 30}
-            component={Comp}
+            durationInFrames={totalDurationInFrames}
+            component={RemotionVideo}
             compositionHeight={1080}
             compositionWidth={1920}
             style={{ width: "100%", height: "100%" }}
+            inputProps={inputProps}
           />
         </div>
 
