@@ -1,0 +1,8 @@
+.growText::after {
+  content: attr(data-replicated-value) '';
+}
+
+.growText > textarea,
+.growText::after {
+  grid-area: 1 / 1 / 2 / 2;
+}
