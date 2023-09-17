@@ -1,4 +1,4 @@
-##nWho is Lisa?
+## Who is Lisa?
 Lisa is our AI Tutor. Lisa is able to answer questions and provide detailed explanations to a wide variety of academic related topics. 
 
 ## Inspiration
