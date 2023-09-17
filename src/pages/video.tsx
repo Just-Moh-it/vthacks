@@ -1,94 +1,141 @@
 import ChatArea from "~/components/chat-area";
 import { Player } from "@remotion/player";
 import { type useChat } from "ai/react";
-import { ScrollArea } from "~/components/ui/scroll-area";
 import { useEffect, useMemo, useState } from "react";
 import { type InputProps } from "~/remotion/video";
 import RemotionVideo from "~/remotion/video";
 import { prefetch } from "remotion";
+import { useZustandStore } from "~/store";
+
+const output = `
+{
+  "chapters": [
+    {
+      "slides": [
+        {
+          "script": "In calculus, a derivative measures how a function changes as its input changes.",
+          "slideLayout": {
+            "type": "title",
+            "title": "Introduction to Derivatives"
+          }
+        },
+        {
+          "script": "In simpler terms, it's a measure of how a curve slopes at any given point. For instance, let's consider the function f(x) = x^2.",
+          "slideLayout": {
+            "type": "titleAndCaption",
+            "title": "Definition of a derivative",
+            "caption": "Visualizing derivatives"
+          }
+        },
+        {
+          "script": "The derivative of this function, denoted as f'(x) or df/dx, gives us 2x. This means, at any point x on the curve of f(x), the slope of the curve is 2x.",
+          "slideLayout": {
+            "type": "imageAndTitleAndPoints",
+            "imageUrl": "derivative-fx.png",
+            "title": "Geometric interpretation",
+            "points": [
+              "f'(x) = 2x",
+              "At any point x, the slope is 2x"
+            ]
+          }
+        },
+        {
+          "script": "Here's how you can compute the derivative of a function. If you have a function \`f(x)\` and you want to find the derivative of this function, you’d use the concept of limits.",
+          "slideLayout": {
+            "type": "titleAndCaption",
+            "title": "Notation and terminology",
+            "caption": "Calculating derivatives using limits"
+          }
+        }
+      ]
+    },
+    {
+      "slides": [
+        {
+          "script": "The rules for differentiation include the power rule, the product rule, the quotient rule, and the chain rule.",
+          "slideLayout": {
+            "type": "title",
+            "title": "Differentiation Rules"
+          }
+        },
+        {
+          "script": "The power rule, for example, simplifies the process of differentiating any function that is a power of x.",
+          "slideLayout": {
+            "type": "titleAndCaption",
+            "title": "Power rule",
+            "caption": "Differentiating powers of x"
+          }
+        },
+        {
+          "script": "The product and quotient rules are used when differentiating functions that are the product or quotient of other functions.",
+          "slideLayout": {
+            "type": "imageAndTitleAndPoints",
+            "imageUrl": "product-quotient-rule.png",
+            "title": "Product and Quotient rule",
+            "points": [
+              "Product rule",
+              "Quotient rule"
+            ]
+          }
+        },
+        {
+          "script": "The chain rule is used when differentiating composite functions.",
+          "slideLayout": {
+            "type": "titleAndCaption",
+            "title": "Chain rule",
+            "caption": "Differentiating composite functions"
+          }
+        }
+      ]
+    },
+    {
+      "slides": [
+        {
+          "script": "Derivatives also have several practical applications. They can be used to determine rates of change, optimize functions, solve related rates problems, and graph functions.",
+          "slideLayout": {
+            "type": "title",
+            "title": "Applications of Derivatives"
+          }
+        },
+        {
+          "script": "The derivative of a function can represent a physical quantity. For example, in physics, speed is the derivative of the position with respect to time.",
+          "slideLayout": {
+            "type": "titleAndCaption",
+            "title": "Rate of change",
+            "caption": "Derivatives in motion"
+          }
+        },
+        {
+          "script": "Derivatives are also used in optimization problems. In fact, the process of finding maxima or minima is fundamentally a calculus problem.",
+          "slideLayout": {
+            "type": "titleAndCaption",
+            "title": "Optimization",
+            "caption": "Finding maxima or minima"
+          }
+        },
+        {
+          "script": "In related rates problems, we use derivatives to relate the rates of change of two or more related quantities.",
+          "slideLayout": {
+            "type": "titleAndCaption",
+            "title": "Related rates",
+            "caption": "Relating rates of change"
+          }
+        },
+        {
+          "script": "Lastly, graphing functions often involves the determination of critical points and inflection points, which are obtained using the first and second derivative respectively.",
+          "slideLayout": {
+            "type": "titleAndCaption",
+            "title": "Graphing functions",
+            "caption": "Using derivatives to graph functions"
+          }
+        }
+      ]
+    }
+  ]
+}`;
 
 export default function Video(props: ReturnType<typeof useChat>) {
-  const [inputProps, setInputProps] = useState<InputProps>({
-    chapters: [
-      {
-        audioUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        faceVideoUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        slides: [
-          {
-            type: "image",
-            imageUrl:
-              "https://images.unsplash.com/photo-1693155119174-4b6e79a27814?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3132&q=80",
-            durationInFrames: 100,
-          },
-        ],
-      },
-      {
-        audioUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        faceVideoUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        slides: [
-          {
-            type: "title",
-            title: "Toxic ex wifey",
-            durationInFrames: 100,
-          },
-        ],
-      },
-      {
-        audioUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        faceVideoUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        slides: [
-          {
-            type: "titleAndCaption",
-            title: "Toxic ex wifey",
-            caption: "(like fr bro)",
-            durationInFrames: 100,
-          },
-        ],
-      },
-      {
-        audioUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        faceVideoUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        slides: [
-          {
-            type: "quoteAndAuthor",
-            quote:
-              "“When it is cool... it is awesome too, just like how to see people and stuff like that”",
-            authorName: "John Dalton",
-            durationInFrames: 100,
-          },
-        ],
-      },
-      {
-        audioUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        faceVideoUrl:
-          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-        slides: [
-          {
-            type: "imageAndTitleAndPoints",
-            imageUrl:
-              "https://images.unsplash.com/photo-1693155119174-4b6e79a27814?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3132&q=80",
-            points: [
-              "It’s cool",
-              "It looks great!",
-              "It is awesome!",
-              "It is cool!",
-            ],
-            title: "Why make it?",
-            durationInFrames: 100,
-          },
-        ],
-      },
-    ],
-  });
+  const { inputProps } = useZustandStore(({ inputProps }) => ({ inputProps }));
 
   const onPause = () => {
     // setMessages([
@@ -117,9 +164,11 @@ export default function Video(props: ReturnType<typeof useChat>) {
     console.log("Changed");
     inputProps.chapters.forEach((chapter) => {
       [
-        chapter.audioUrl,
-        chapter.faceVideoUrl,
-        ...chapter.slides.map((slide) => "imageUrl" in slide && slide.imageUrl),
+        ...chapter.slides.flatMap((slide) => [
+          "stockImageUrl" in slide && slide.stockImageUrl,
+          slide.audioUrl,
+          slide.faceVideoUrl,
+        ]),
       ]
         .flatMap((item) => (item ? [item] : []))
         .forEach((url) => {

@@ -1,22 +1,19 @@
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { z } from "zod";
 import { env } from "~/env.mjs";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import fs from "fs";
+import path from "path";
 
 export const elevenlabsRouter = createTRPCRouter({
-  createTTS: publicProcedure
+  transcribe: publicProcedure
     .input(
       z.object({
         voiceId: z.string().optional().default("ewdB8Jn9FJaYMorleDYC"),
-        text: z
-          .string()
-          .optional()
-          .default(
-            "You can turn on latency optimizations at some cost of quality. The best possible final latency varies by model.",
-          ),
+        text: z.string(),
       }),
     )
     .mutation(async ({ input: { voiceId, text } }) => {
-      const data = await fetch(
+      const res = await fetch(
         `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
         {
           method: "POST",
@@ -26,7 +23,7 @@ export const elevenlabsRouter = createTRPCRouter({
             "xi-api-key": env.ELEVENLABS_API_KEY,
           },
           body: JSON.stringify({
-            text,
+            text: text,
             model_id: "eleven_monolingual_v1",
             voice_settings: {
               stability: 0,
@@ -38,10 +35,14 @@ export const elevenlabsRouter = createTRPCRouter({
         },
       );
 
-      const blob = await data.blob();
+      const arrayBuffer = await res.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const file = Math.random().toString(36).substring(7);
 
-      // You can log the blob or perform any other operation on the blob.
-      console.log(blob);
-      return blob;
+      fs.writeFile(path.join("public", "audio", `${file}.mp3`), buffer, () => {
+        console.log("File written successfully");
+      });
+
+      return { url: `/${file}.mp3` };
     }),
 });

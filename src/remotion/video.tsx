@@ -10,10 +10,11 @@ import { type slideSchema } from "~/types/lisa-json";
 
 export type InputProps = {
   chapters: {
-    audioUrl: string;
-    faceVideoUrl: string;
     slides: (z.infer<typeof slideSchema> & {
       durationInFrames: number;
+      audioUrl: string;
+      faceVideoUrl?: string;
+      script?: string;
     })[];
   }[];
 };
@@ -48,17 +49,19 @@ export default function VideoComp(inputProps: InputProps) {
             }, 1) || 1
           }
         >
-          <Audio src={chapter.audioUrl} />
-          <Video
-            src={chapter.faceVideoUrl}
-            className="absolute bottom-10 right-10 z-30 h-[400px] w-[400px] rounded-full object-cover object-center"
-          />
           <Series>
             {chapter.slides.map((slide, a) => (
               <Series.Sequence
                 key={a}
                 durationInFrames={slide.durationInFrames}
               >
+                <Audio src={slide.audioUrl} />
+                {slide.faceVideoUrl && (
+                  <Video
+                    src={slide.faceVideoUrl}
+                    className="absolute bottom-10 right-10 z-30 h-[400px] w-[400px] rounded-full object-cover object-center"
+                  />
+                )}
                 {getSlide(slide)}
               </Series.Sequence>
             ))}

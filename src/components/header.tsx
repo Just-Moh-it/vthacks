@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 
 export default function Header() {
   return (
-    <header className="from-background to-background/80 sticky top-0 flex items-center justify-between bg-gradient-to-b pt-10 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 flex items-center justify-between bg-gradient-to-b from-background to-background/80 pt-10 backdrop-blur-sm">
       <Button variant="default">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,7 @@ export default function Header() {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 433 182"
-        className="text-edge-outline animate-title font-display relative z-10 cursor-default whitespace-nowrap bg-white bg-clip-text text-4xl text-transparent duration-1000 sm:text-6xl md:text-9xl"
+        className="text-edge-outline relative z-10 animate-title cursor-default whitespace-nowrap bg-white bg-clip-text font-display text-4xl text-transparent duration-1000 sm:text-6xl md:text-9xl"
         initial={{
           translateY: "50%",
           height: 182,

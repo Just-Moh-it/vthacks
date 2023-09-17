@@ -5,19 +5,17 @@ import { api } from "~/utils/api";
 import { type useChat } from "ai/react";
 import { cn } from "~/lib/utils";
 import Image from "next/image";
-import "~/pages/latex.min.css";
+import "~/styles/latex.min.css";
 import Latex from "react-latex-next";
+import { useReplicatePrediction } from "~/lib/hooks/useReplicate";
 
 export default function ChatArea({
   messages,
-  setMessages,
   handleSubmit,
   handleInputChange,
   input,
 }: ReturnType<typeof useChat>) {
   const [promptInput, setPromptInput] = useState("");
-  const { mutate: createElevenlabsMutate } =
-    api.elevenlabs.createTTS.useMutation();
   const { mutate, data, isLoading } =
     api.predictNextQuestion.predict.useMutation({
       onMutate: () => {
@@ -29,6 +27,10 @@ export default function ChatArea({
         }
       },
     });
+  const { mutate: mutateUnsplash } = api.unsplash.searchImage.useMutation({
+    onSuccess: (dat) => console.log("Unsplash", dat),
+  });
+  const { createPredictionMutate } = useReplicatePrediction({});
   const predicted = useRef(false);
   const [currentPrediction, setCurrentPrediction] = useState("");
 
@@ -38,6 +40,28 @@ export default function ChatArea({
         className="flex h-full grow flex-col gap-8 p-7"
         id="conversation-container"
       >
+        {/* <div
+          onClick={() => {
+            createPredictionMutate({
+              source_image:
+                "https://pub-4bf634469b5c482e9546855c0abd7a17.r2.dev/IMG_5718.jpg",
+              driven_audio:
+                "https://pub-4bf634469b5c482e9546855c0abd7a17.r2.dev/Virginia-Polytechnic-Institute-and-State-University-2.mp3",
+            });
+          }}
+        >
+          Replicate
+        </div>
+        <div
+          onClick={() => {
+            mutateUnsplash({ query: "Chemical" });
+          }}
+        >
+          unsplash
+        </div>
+        <div onClick={() => videoMetadataTest.mutate({ messages })}>
+          TEST VID METADATA d
+        </div> */}
         {messages.map((m) => (
           <div
             key={m.id}
@@ -67,12 +91,10 @@ export default function ChatArea({
               }
             >
               {m.content.split("\n").map((line) => (
-                <>
-                  <p key={Math.random()} className="text-base">
-                    <Latex>{line}</Latex>
-                  </p>
+                <div key={Math.random()}>
+                  <Latex>{line}</Latex>
                   {line == "" ? <br /> : <></>}
-                </>
+                </div>
               ))}
             </div>
           </div>
@@ -81,6 +103,7 @@ export default function ChatArea({
 
       <form
         onSubmit={(e) => {
+          e.preventDefault();
           handleSubmit(e);
           mutate({ previousQuestion: input });
           setPromptInput("");
@@ -130,19 +153,19 @@ export default function ChatArea({
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
             >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
               <g
                 id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               ></g>
               <g id="SVGRepo_iconCarrier">
                 <path
                   d="M5.36328 12.0523C4.01081 11.5711 3.33457 11.3304 3.13309 10.9655C2.95849 10.6492 2.95032 10.2673 3.11124 9.94388C3.29694 9.57063 3.96228 9.30132 5.29295 8.76272L17.8356 3.68594C19.1461 3.15547 19.8014 2.89024 20.2154 3.02623C20.5747 3.14427 20.8565 3.42608 20.9746 3.7854C21.1106 4.19937 20.8453 4.85465 20.3149 6.16521L15.2381 18.7078C14.6995 20.0385 14.4302 20.7039 14.0569 20.8896C13.7335 21.0505 13.3516 21.0423 13.0353 20.8677C12.6704 20.6662 12.4297 19.99 11.9485 18.6375L10.4751 14.4967C10.3815 14.2336 10.3347 14.102 10.2582 13.9922C10.1905 13.8948 10.106 13.8103 10.0086 13.7426C9.89876 13.6661 9.76719 13.6193 9.50407 13.5257L5.36328 12.0523Z"
                   stroke="#000000"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 ></path>{" "}
               </g>
             </svg>
@@ -151,7 +174,21 @@ export default function ChatArea({
 
         <p
           className="block text-center text-sm text-[#A6A19F]"
-          onClick={() => createElevenlabsMutate({})}
+          onClick={async () => {
+            // videoMetadataTest.mutate({ messages })}
+            const res = await fetch("/api/elevenlabs", {
+              method: "POST",
+              headers: {
+                accept: "audio/mpeg",
+              },
+              body: JSON.stringify({
+                text: "Hey, just audio testing",
+              }),
+            });
+
+            const data = await res.text();
+            console.log("Dat", data);
+          }}
         >
           Made for VTHacks-11: Not ready for production use
         </p>

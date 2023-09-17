@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { ReplicateStream, StreamingTextResponse } from "ai";
 import Replicate from "replicate";
+import { env } from "~/env.mjs";
 
 const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_KEY || "",
+  auth: env.REPLICATE_API_TOKEN,
 });
 
 export const replicateRouter = createTRPCRouter({
@@ -29,7 +29,8 @@ export const replicateRouter = createTRPCRouter({
     }),
   getPrediction: publicProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(({ input: { id } }) => {
-      console.log("id", id);
+    .mutation(async ({ input: { id } }) => {
+      const response = await replicate.predictions.get(id);
+      return response;
     }),
 });

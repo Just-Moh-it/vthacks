@@ -13,11 +13,23 @@ export const titleAndCaptionSlideSchema = _baseSlideSchema.extend({
 });
 export const imageSlideSchema = _baseSlideSchema.extend({
   type: z.literal("image"),
-  imageUrl: z.string(),
+  stockImageQuery: z
+    .string()
+    .describe(
+      "A very broad search query, like 'blue chemical' instead of 'Copper Sulphide'",
+    )
+    .optional(),
+  stockImageUrl: z.string().url().optional(),
 });
 export const imageAndTitleAndPointsSlideSchema = _baseSlideSchema.extend({
   type: z.literal("imageAndTitleAndPoints"),
-  imageUrl: z.string(),
+  stockImageQuery: z
+    .string()
+    .describe(
+      "A very broad search query, like 'blue chemical' instead of 'Copper Sulphide'",
+    )
+    .optional(),
+  stockImageUrl: z.string().url().optional(),
   title: z.string(),
   points: z.string().array().min(3).max(5),
 });
