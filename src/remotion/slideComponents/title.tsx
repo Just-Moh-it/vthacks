@@ -6,8 +6,8 @@ export default function TitleSlide({
   title,
 }: z.infer<typeof titleSlideSchema>) {
   return (
-    <AbsoluteFill className="items-center justify-center">
-      <h1 className=" font-display text-[226px]">{title}</h1>
+    <AbsoluteFill className="items-center justify-center text-center bg-white">
+      <h1 className=" font-display text-[226px] leading-[288px]">{title}</h1>
     </AbsoluteFill>
   );
 }

@@ -18,6 +18,6 @@ export const unsplasRouter = createTRPCRouter({
       if (!res.ok) throw new Error(`No ok ${res.status}`);
 
       const json = await res.json();
-      return json;
+      return json as { results: { id: string; urls: { regular: string } }[] };
     }),
 });

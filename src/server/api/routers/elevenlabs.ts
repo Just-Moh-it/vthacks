@@ -35,6 +35,11 @@ export const elevenlabsRouter = createTRPCRouter({
         },
       );
 
+      if (!res.ok) {
+        throw new Error(
+          ["Unable to create audio", res.status, res.statusText].join(", "),
+        );
+      }
       const arrayBuffer = await res.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       const file = Math.random().toString(36).substring(7);
@@ -43,6 +48,6 @@ export const elevenlabsRouter = createTRPCRouter({
         console.log("File written successfully");
       });
 
-      return { url: `/${file}.mp3` };
+      return { url: `/audio/${file}.mp3` };
     }),
 });

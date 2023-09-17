@@ -37,38 +37,16 @@ export default function ChatArea({
   return (
     <>
       <div
-        className="flex h-full grow flex-col gap-8 p-7"
+        className="relative flex h-full grow flex-col gap-8 p-7"
         id="conversation-container"
       >
-        {/* <div
-          onClick={() => {
-            createPredictionMutate({
-              source_image:
-                "https://pub-4bf634469b5c482e9546855c0abd7a17.r2.dev/IMG_5718.jpg",
-              driven_audio:
-                "https://pub-4bf634469b5c482e9546855c0abd7a17.r2.dev/Virginia-Polytechnic-Institute-and-State-University-2.mp3",
-            });
-          }}
-        >
-          Replicate
-        </div>
-        <div
-          onClick={() => {
-            mutateUnsplash({ query: "Chemical" });
-          }}
-        >
-          unsplash
-        </div>
-        <div onClick={() => videoMetadataTest.mutate({ messages })}>
-          TEST VID METADATA d
-        </div> */}
         {messages.map((m) => (
           <div
             key={m.id}
             className={cn(
               "relative max-w-[75%]",
               m.role === "user"
-                ? "flex items-end self-end rounded-xl bg-[#EED9E6] p-3 text-right"
+                ? "flex items-end self-end rounded-xl bg-[#EED9E6] p-3 text-right h-auto"
                 : "self-start text-left",
             )}
           >

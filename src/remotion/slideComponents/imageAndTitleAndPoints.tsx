@@ -3,15 +3,15 @@ import { type z } from "zod";
 import { type imageAndTitleAndPointsSlideSchema } from "~/types/lisa-json";
 
 export default function ImageAndTitleAndPointsSlide({
-  stockImageQuery,
+  stockImageUrl,
   title,
   points,
 }: z.infer<typeof imageAndTitleAndPointsSlideSchema>) {
   return (
     <AbsoluteFill className="!flex-row gap-36 bg-white px-28 py-48">
-      {stockImageQuery && (
+      {stockImageUrl && (
         <Img
-          src={stockImageQuery}
+          src={stockImageUrl}
           className="h-[700px] w-[620px] object-cover object-center"
         />
       )}

@@ -10,29 +10,31 @@ import { type slideSchema } from "~/types/lisa-json";
 
 export type InputProps = {
   chapters: {
-    slides: (z.infer<typeof slideSchema> & {
+    slides: {
+      slideLayout: z.infer<typeof slideSchema>;
       durationInFrames: number;
       audioUrl: string;
       faceVideoUrl?: string;
       script?: string;
-    })[];
+    }[];
   }[];
 };
 
 export default function VideoComp(inputProps: InputProps) {
   const getSlide = useCallback(
     (slide: InputProps["chapters"][number]["slides"][number]) => {
-      switch (slide.type) {
+      console.log("")
+      switch (slide.slideLayout.type) {
         case "image":
-          return <ImageSlide {...slide} />;
+          return <ImageSlide {...slide.slideLayout} />;
         case "imageAndTitleAndPoints":
-          return <ImageAndTitleAndPointsSlide {...slide} />;
+          return <ImageAndTitleAndPointsSlide {...slide.slideLayout} />;
         case "quoteAndAuthor":
-          return <QuoteAndAuthorSlide {...slide} />;
+          return <QuoteAndAuthorSlide {...slide.slideLayout} />;
         case "title":
-          return <TitleSlide {...slide} />;
+          return <TitleSlide {...slide.slideLayout} />;
         case "titleAndCaption":
-          return <TitleAndCaption {...slide} />;
+          return <TitleAndCaption {...slide.slideLayout} />;
       }
     },
     [],

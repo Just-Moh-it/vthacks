@@ -112,7 +112,7 @@ export const videoPrompts = {
   Generate the chapter scripts. Each slide should have between 3 and 10 sentences. This script should be detailed but also concice.
   Slide layouts should include all the arguments that come with their corresponding type or are included in the name.
   For stockImageQuery, come up with a short search query that will be used with a stock image database to get an image for the slide. Image queries should not be super specific since stock images for specific queries are hard to find. Keep them broad and oriented to find images that are related to the topic and not the exact topic itself.
-  
+  Slides with points in them should have a max of 3 words per point.
   You MUST include a script, a slide template, and the args for each slide template.`,
 };
 

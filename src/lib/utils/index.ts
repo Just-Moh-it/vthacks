@@ -26,7 +26,10 @@ type ChatFunctionArgs<T extends ZodObject<any, any>> = {
     mutateTranscribeAsync: ReturnType<
       typeof api.elevenlabs.transcribe.useMutation
     >["mutateAsync"],
-    router: ReturnType<typeof useRouter>,
+    push: ReturnType<typeof useRouter>["push"],
+    mutateUnsplashAsync: ReturnType<
+      typeof api.unsplash.searchImage.useMutation
+    >["mutateAsync"],
   ) => void;
 };
 export function prepareFunction<T extends ZodObject<any, any>>(

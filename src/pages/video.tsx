@@ -184,8 +184,8 @@ export default function Video(props: ReturnType<typeof useChat>) {
 
   const totalDurationInFrames = useMemo(
     () =>
-      inputProps.chapters.reduce((agg, { slides }) => {
-        const slidesAggDur = slides.reduce(
+      inputProps.chapters?.reduce((agg, { slides }) => {
+        const slidesAggDur = slides?.reduce(
           (aggSlide, { durationInFrames }) => aggSlide + durationInFrames,
           0,
         );
@@ -202,7 +202,7 @@ export default function Video(props: ReturnType<typeof useChat>) {
           <Player
             controls
             fps={30}
-            durationInFrames={totalDurationInFrames}
+            durationInFrames={Math.ceil(totalDurationInFrames)}
             component={RemotionVideo}
             compositionHeight={1080}
             compositionWidth={1920}
@@ -222,7 +222,3 @@ export default function Video(props: ReturnType<typeof useChat>) {
     </div>
   );
 }
-
-const Comp = () => {
-  return <h1 className="text-xl">Hello worl</h1>;
-};
