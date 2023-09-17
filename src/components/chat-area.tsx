@@ -8,6 +8,7 @@ import Image from "next/image";
 import "~/styles/latex.min.css";
 import Latex from "react-latex-next";
 import { useReplicatePrediction } from "~/lib/hooks/useReplicate";
+import { useRouter } from "next/router";
 
 export default function ChatArea({
   messages,
@@ -15,6 +16,7 @@ export default function ChatArea({
   handleInputChange,
   input,
 }: ReturnType<typeof useChat>) {
+  const { pathname } = useRouter();
   const [promptInput, setPromptInput] = useState("");
   const { mutate, data, isLoading } =
     api.predictNextQuestion.predict.useMutation({
@@ -37,7 +39,7 @@ export default function ChatArea({
   return (
     <>
       <div
-        className="relative flex h-full grow flex-col gap-8 p-7"
+        className="relative flex h-full grow flex-col gap-8 overflow-auto p-7"
         id="conversation-container"
       >
         {messages.map((m) => (
@@ -46,7 +48,7 @@ export default function ChatArea({
             className={cn(
               "relative max-w-[75%]",
               m.role === "user"
-                ? "flex items-end self-end rounded-xl bg-[#EED9E6] p-3 text-right h-auto"
+                ? "flex h-auto items-end self-end rounded-xl bg-[#EED9E6] p-3 text-right"
                 : "self-start text-left",
             )}
           >
@@ -96,7 +98,7 @@ export default function ChatArea({
               setPromptInput(e.target.value);
               handleInputChange(e);
             }}
-            className="grow"
+            className={cn("grow", pathname === "video" ? "fixed bottom-0" : "")}
             placeholder={
               predicted.current
                 ? isLoading

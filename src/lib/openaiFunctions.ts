@@ -6,7 +6,6 @@ import {
 } from "~/lib/video";
 import { useZustandStore } from "~/store";
 import { getAudioDurationCustom } from "~/lib/getAudioDurationCustom";
-import { type InputProps } from "~/remotion/video";
 
 export const openaiFunctions = {
   create_video: prepareFunction({
@@ -303,7 +302,7 @@ export const openaiFunctions = {
               voiceId: useZustandStore.getState().voiceId,
             });
             const durationInFrames =
-              (await getAudioDurationCustom(url)) * 30 || 1;
+              (await getAudioDurationCustom(url)) * 30 + 25 || 1;
 
             console.log("Outta scope", stockUrl);
 

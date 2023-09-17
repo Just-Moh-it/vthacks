@@ -1,5 +1,5 @@
 import ChatArea from "~/components/chat-area";
-import { Player } from "@remotion/player";
+import { Player, Thumbnail } from "@remotion/player";
 import { type useChat } from "ai/react";
 import { useEffect, useMemo, useState } from "react";
 import { type InputProps } from "~/remotion/video";
@@ -212,11 +212,33 @@ export default function Video(props: ReturnType<typeof useChat>) {
         </div>
 
         {/* Chapters area */}
-        <div className="col-span-2 row-span-1 grow rounded-2xl bg-[#F9F1F7]"></div>
+        <div className="col-span-2 row-span-1 flex grow items-stretch gap-7 overflow-x-auto overflow-y-hidden rounded-2xl bg-[#F9F1F7] p-4">
+          {inputProps.chapters.map((chapter, i) => (
+            <div className="flex items-center gap-5" key={i}>
+              {chapter.slides.map((slide) => (
+                <Thumbnail
+                  fps={30}
+                  durationInFrames={totalDurationInFrames}
+                  className="aspect-video max-h-[400px] min-h-[70px] overflow-hidden rounded-2xl"
+                  inputProps={inputProps}
+                  key={slide.audioUrl}
+                  component={RemotionVideo}
+                  compositionWidth={1980}
+                  compositionHeight={1080}
+                  frameToDisplay={10}
+                  style={{
+                    width: "100%",
+                    borderRadius: "20px",
+                  }}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Chat-area */}
-      <div className="col-span-1 row-span-3 min-h-0 grow overflow-y-auto overflow-x-hidden rounded-2xl bg-[#F9F1F7]">
+      <div className="relative col-span-1 row-span-3 min-h-0 grow overflow-y-auto overflow-x-hidden rounded-2xl bg-[#F9F1F7]">
         <ChatArea {...props} />
       </div>
     </div>

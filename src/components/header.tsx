@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import Link from "next/link";
 import {
   Select,
@@ -15,8 +15,14 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between bg-gradient-to-b from-background to-background/80 pt-10 backdrop-blur-sm">
-      <div></div>
-      <Link href="/">
+      <Link
+        className={buttonVariants()}
+        href="https://github.com/just-moh-it/vthacks"
+      >
+        GitHub
+      </Link>
+
+      <Link href="/" className="relative -right-20 cursor-pointer">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -42,33 +48,33 @@ export default function Header() {
         </motion.svg>
       </Link>
 
-      {/* <Button variant="default"> */}
-      <Select
-        onValueChange={(newVoiceId) =>
-          useZustandStore.setState({ voiceId: newVoiceId })
-        }
-        value={voiceId}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Theme" />
-        </SelectTrigger>
-        <SelectContent>
-          {(
-            [
-              ["Lisa", "ewdB8Jn9FJaYMorleDYC"],
-              ["Spongebob", "PrWjskoYqVPMf87nkKpC"],
-              ["Biden", "9SrTSLgW7RBDEfKDfD17"],
-              ["Trump", "10M69KPcgJNLnxjYd1a2"],
-            ] as [string, string][]
-          ).map(([label, id]) => (
-            <SelectItem key={id} value={id}>
-              {label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Button variant="default" className="py-1">
+        <Select
+          onValueChange={(newVoiceId) =>
+            useZustandStore.setState({ voiceId: newVoiceId })
+          }
+          value={voiceId}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Theme" />
+          </SelectTrigger>
+          <SelectContent>
+            {(
+              [
+                ["Lisa", "ewdB8Jn9FJaYMorleDYC"],
+                ["Spongebob", "PrWjskoYqVPMf87nkKpC"],
+                ["Biden", "9SrTSLgW7RBDEfKDfD17"],
+                ["Trump", "10M69KPcgJNLnxjYd1a2"],
+              ] as [string, string][]
+            ).map(([label, id]) => (
+              <SelectItem key={id} value={id}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
-      {/* <svg
+        {/* <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
           stroke="currentColor"
@@ -84,7 +90,7 @@ export default function Header() {
             d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zm4.28 5.16a.75.75 0 1 0-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 0 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L20.56 12l1.72-1.72a.75.75 0 0 0-1.06-1.06l-1.72 1.72-1.72-1.72z"
           />
         </svg> */}
-      {/* </Button> */}
+      </Button>
     </header>
   );
 }

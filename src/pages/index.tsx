@@ -1,5 +1,4 @@
 import { LoadingScreen } from "~/components/loading";
-import { useState } from "react";
 import ChatArea from "~/components/chat-area";
 import { type useChat } from "ai/react";
 import { useZustandStore } from "~/store";
