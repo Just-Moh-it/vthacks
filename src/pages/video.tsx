@@ -167,9 +167,9 @@ export default function Video(props: ReturnType<typeof useChat>) {
       </div>
 
       {/* Chat-area */}
-      <ScrollArea className="col-span-1 row-span-3 min-h-0 grow overflow-y-auto overflow-x-hidden rounded-2xl bg-[#F9F1F7]">
+      <div className="col-span-1 row-span-3 min-h-0 grow overflow-y-auto overflow-x-hidden rounded-2xl bg-[#F9F1F7]">
         <ChatArea {...props} />
-      </ScrollArea>
+      </div>
     </div>
   );
 }
